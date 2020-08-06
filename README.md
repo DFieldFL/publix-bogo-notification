@@ -1,5 +1,5 @@
 # Publix BOGO Beer
-Publishes the Buy One Get One beers to the Twitter account of your choosing
+Publishes the Buy One Get One beers to the Twitter account of your choosing using AWS Lambda
 
 ## Requirements
 Python 3.7.x
