@@ -2,8 +2,8 @@
 Publishes the Buy One Get One beers to the Twitter account of your choosing using AWS Lambda
 
 ## Requirements
-Python 3.7.x
-Twitter API Credentials
+- Python 3.7.x
+- Twitter API Credentials
 
 ## Installation and Setup
 1. Clone the repository
