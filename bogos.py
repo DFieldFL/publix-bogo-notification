@@ -25,8 +25,11 @@ class ScrapeBogos:
     # Get bogo item name
     for bogoItem in bogoItems:
       itemName = bogoItem.find('div', attrs={'class': 'title'}).find('h2', attrs={'class': 'ellipsis_text'}).text
-      itemSaleText = bogoItem.find('div', attrs={'class': 'deal'}).find('span', attrs={'class': 'ellipsis_text'}).text
       # print(itemName)
+      itemDealDiv = bogoItem.find('div', attrs={'class': 'deal'})
+      if itemDealDiv is None:
+        continue
+      itemSaleText = itemDealDiv.find('span', attrs={'class': 'ellipsis_text'}).text
       # print(itemSaleText)
 
       saleText = None
