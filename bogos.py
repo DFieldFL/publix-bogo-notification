@@ -3,21 +3,21 @@ import requests
 
 class ScrapeBogos:
 
-  def __init__(self, url, pageParam, numPages):
+  def __init__(self, url, keywords, prefixText, postfixText):
     self.url = url
-    self.pageParam = pageParam
-    self.numPages = numPages
-    self.beerList = []
+    self.keywords = keywords
+    self.prefixText = prefixText
+    self.postfixText = postfixText
+    self.itemsFound = []
 
   def initialize(self):
-    print(self.url)
     response = requests.get(self.url, timeout=5)
     content = BeautifulSoup(response.content, "html.parser")
     # print(content)
     self.__parseItems(content)
 
-  def getBeerList(self):
-    return self.beerList
+  def getItemsFound(self):
+    return self.itemsFound
 
   def __parseItems(self, content):
     bogoItems = content.findAll('div', attrs={'class': 'theTileContainer'})
@@ -38,17 +38,18 @@ class ScrapeBogos:
       elif self.__isB2go(itemSaleText):
         saleText = 'B2G1'
 
-      if saleText is not None and self.__isBeer(itemName):
+      if saleText is not None and self.__isKeywordMatch(itemName):
         itemDate = bogoItem.find('div', attrs={'class': 'validDates'}).find('span').text
         itemDate = itemDate.strip().replace('\r\n', ' ')
-        combinedString = '🍺 ' + saleText + ': ' + itemName + ' 🍺 ' + itemDate
-        self.beerList.append(combinedString)
+        combinedString = self.prefixText + ' ' + saleText + ': ' + itemName + ' ' + self.postfixText + ' ' + itemDate
+        self.itemsFound.append(combinedString)
 
-  def __isBeer(self, name):
+  def __isKeywordMatch(self, name):
     lowerName = name.lower()
-    # Added space in the beginning to make sure it is a start of a new word
-    beerText = [' beer', ' lager', ' ale', ' pilsner' , ' ipa']
-    return any(s in lowerName for s in beerText)
+    for s in lowerName.split(' '):
+      if s in self.keywords:
+        return True
+    return False
 
   def __isBogo(self, saleText):
     lowerText = saleText.lower();

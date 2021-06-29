@@ -1,20 +1,80 @@
 from bogos import ScrapeBogos
+
+import configparser
 import twitter
 
 def lambda_handler(event, context):
-  bogos = ScrapeBogos('https://accessibleweeklyad.publix.com/PublixAccessibility/BrowseByListing/ByCategory/?ListingSort=8&StoreID=2501049&CategoryID=5232521', '', '')
-  bogos.initialize()
-  tweetBogoBeers(bogos.getBeerList())
+  config = configparser.ConfigParser()
+  config.read('config.ini');
+  keywords = ''
+  url = ''
+  prefixText = ''
+  postfixText = ''
+  noBogoText = ''
 
-def tweetBogoBeers(beerList):
-  api = twitter.Api(consumer_key='',
-                    consumer_secret='',
-                    access_token_key='',
-                    access_token_secret='')
-  if beerList:
-    for beer in beerList:
-      print(beer);
-      api.PostUpdate(beer)
+  print('Config values:')
+  if 'BOGO' not in config:
+    print("No BOGO config found")
+    return
+  else:
+    bogoConfig = config['BOGO']
+    if 'keywords' not in bogoConfig or 'url' not in bogoConfig:
+      print("'keywords' or 'url' was provided in the config")
+      return
+    else:
+      keywords = bogoConfig['keywords']
+      print('keywords: ' + keywords)
+      print(keywords)
+      url = bogoConfig['url']
+      print('url: ' + url)
+
+  if 'prefixText' in bogoConfig:
+    prefixText = bogoConfig['prefixText']
+    print('prefixText: ' + prefixText)
+
+  if 'postfixText' in bogoConfig:
+    postfixText = bogoConfig['postfixText']
+    print('postfixText: ' + postfixText)
+
+  if 'noBogoText' in bogoConfig:
+    noBogoText = bogoConfig['noBogoText']
+    print('noBogoText: ' + noBogoText)
+
+  consumer_key = ''
+  consumer_secret = ''
+  access_token_key = ''
+  access_token_secret = ''
+  if 'TwitterApi' in config:
+    twitterConfig = config['TwitterApi']
+    consumer_key = twitterConfig['consumer_key']
+    consumer_secret = twitterConfig['consumer_secret']
+    access_token_key = twitterConfig['access_token_key']
+    access_token_secret = twitterConfig['access_token_secret']
+
+  print('End of config values')
+  print('====================\n')
+
+  bogos = ScrapeBogos(url, keywords, prefixText, postfixText)
+  bogos.initialize()
+  tweetBogo(bogos.getItemsFound(), noBogoText, consumer_key, consumer_secret, access_token_key, access_token_secret)
+
+def tweetBogo(itemsFound, noBogoText, consumer_key, consumer_secret, access_token_key, access_token_secret):
+  twitterApi = None
+  if consumer_key and consumer_secret and access_token_key and access_token_secret:
+    twitterApi = twitter.Api(consumer_key=consumer_key,
+                              consumer_secret=consumer_secret,
+                              access_token_key=access_token_key,
+                              access_token_secret=access_token_secret)
+  if itemsFound:
+    for item in itemsFound:
+      print(item);
+      if twitterApi:
+        print('posting to twitter: ' + item)
+        twitterApi.PostUpdate(item)
+  elif noBogoText:
+    print(noBogoText);
+    if twitterApi:
+      print('posting to twitter: ' + noBogoText)
+      twitterApi.PostUpdate(noBogoText)
   else:
     print("nothing found");
-    api.PostUpdate("Sorry no 🍺 this week 😞!")
