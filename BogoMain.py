@@ -24,7 +24,6 @@ def lambda_handler(event, context):
     else:
       keywords = bogoConfig['keywords']
       print('keywords: ' + keywords)
-      print(keywords)
       url = bogoConfig['url']
       print('url: ' + url)
 
