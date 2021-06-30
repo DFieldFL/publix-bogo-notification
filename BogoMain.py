@@ -7,6 +7,7 @@ def lambda_handler(event, context):
   config = configparser.ConfigParser()
   config.read('config.ini');
   keywords = ''
+  keywordMultiWord = False
   url = ''
   prefixText = ''
   postfixText = ''
@@ -22,10 +23,14 @@ def lambda_handler(event, context):
       print("'keywords' or 'url' was provided in the config")
       return
     else:
-      keywords = bogoConfig['keywords']
-      print('keywords: ' + keywords)
+      keywords = bogoConfig['keywords'].split(',')
+      print('keywords: ' + str(keywords))
       url = bogoConfig['url']
       print('url: ' + url)
+
+  if 'keywordMultiWord' in bogoConfig:
+    keywordMultiWord = bogoConfig['keywordMultiWord'].lower() == 'true'
+    print('keywordMultiWord: ' + str(keywordMultiWord))
 
   if 'prefixText' in bogoConfig:
     prefixText = bogoConfig['prefixText']
@@ -53,7 +58,7 @@ def lambda_handler(event, context):
   print('End of config values')
   print('====================\n')
 
-  bogos = ScrapeBogos(url, keywords, prefixText, postfixText)
+  bogos = ScrapeBogos(url, keywords, keywordMultiWord, prefixText, postfixText)
   bogos.initialize()
   tweetBogo(bogos.getItemsFound(), noBogoText, consumer_key, consumer_secret, access_token_key, access_token_secret)
 
