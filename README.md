@@ -18,7 +18,7 @@ Publishes the Buy One Get One beers to the Twitter account of your choosing usin
 ### Config
 #### BOGO
 | Property | Description |
-| --- | --- |
+| :--- | :--- |
 | url | URL for parsing the Publix Ads. Go to the Publix Ads page and scroll to the bottom for "WEEKLY AD ACCESSIBILITY". Choose one of the pages withing Accessibility to use the copy and paste the url into this property. |
 | keywords | Keywords to use to match for notification. Seperate keywords by the comma |
 | keywordMultiWord | If true the keyword match will span multiple words (ex. `hot dog,peanut butter`) |
