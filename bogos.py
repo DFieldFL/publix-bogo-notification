@@ -3,9 +3,10 @@ import requests
 
 class ScrapeBogos:
 
-  def __init__(self, url, keywords, prefixText, postfixText):
+  def __init__(self, url, keywords, keywordMultiWord, prefixText, postfixText):
     self.url = url
     self.keywords = keywords
+    self.keywordMultiWord = keywordMultiWord
     self.prefixText = prefixText
     self.postfixText = postfixText
     self.itemsFound = []
@@ -46,9 +47,15 @@ class ScrapeBogos:
 
   def __isKeywordMatch(self, name):
     lowerName = name.lower()
-    for s in lowerName.split(' '):
-      if s in self.keywords:
-        return True
+    if self.keywordMultiWord:
+      for s in self.keywords:
+        if s in lowerName:
+          return True
+    else:
+      for s in lowerName.split(' '):
+        if s in self.keywords:
+          return True
+
     return False
 
   def __isBogo(self, saleText):
