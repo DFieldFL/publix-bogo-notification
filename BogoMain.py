@@ -1,4 +1,4 @@
-from bogos import ScrapeBogos
+from publix_bogos.bogos import ScrapeBogos
 
 import configparser
 import twitter
