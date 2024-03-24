@@ -3,6 +3,7 @@ import logging
 import boto3
 from bs4 import BeautifulSoup
 from bogos import parse_webpage_bogos, retrieve_sales_webpage
+from botocore.exceptions import ClientError
 
 
 def main():
