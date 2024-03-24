@@ -1,5 +1,6 @@
 import configparser
 import logging
+import boto3
 from bs4 import BeautifulSoup
 from bogos import parse_webpage_bogos, retrieve_sales_webpage
 
@@ -12,7 +13,7 @@ def main():
 
     logging.info('Config values:')
 
-    keywords = ''
+    keywords = []
     is_keyword_multiword = False
     url = ''
     prefix_text = ''
@@ -52,9 +53,9 @@ def main():
         logging.info('no_bogo_text: ' + no_bogo_text)
 
     bogo_items = retrieve_bogos(url)
-    filtered_bogo_items = [f'{item[0]} is {item[1]}' for item in bogo_items if is_keyword_match(item[0])]
-    sns
-    logging.info(bogo_items)
+    filtered_bogo_items = [f'{item[0]} is {item[1]}' for item in bogo_items if is_keyword_match(item[0], keywords)]
+    send_bogo_notifications(filtered_bogo_items)
+    logging.info(filtered_bogo_items)
 
 def set_logging(config: configparser.ConfigParser):
     """Set the logging level based on the config otherwise default to INFO.
@@ -102,6 +103,26 @@ def is_keyword_match(text: str, keywords: list[str]) -> bool:
             return True
 
     return False
+
+
+def send_bogo_notifications(bogo_items: list[str]):
+    sns_resource = boto3.resource("sns")
+    sms_text = '\n'.join(bogo_items)
+
+    # TODO pass in phone number
+    phone_number = '14074351722'
+
+    try:
+        response = sns_resource.meta.client.publish(
+            PhoneNumber=phone_number, Message=sms_text
+        )
+        message_id = response["MessageId"]
+        logging.info(f'Published message to {phone_number}')
+    except ClientError:
+        logging.exception(f"Couldn't publish message to {phone_number}")
+        raise
+    else:
+        return message_id
 
 
 if __name__ == '__main__':
