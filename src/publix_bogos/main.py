@@ -1,8 +1,8 @@
 import configparser
 import logging
 from bs4 import BeautifulSoup
-from bogos import BogoItem, parse_webpage_bogos, retrieve_sales_webpage
 
+from publix_bogos.bogos import BogoItem, parse_webpage_bogos, retrieve_sales_webpage
 from publix_bogos.console import LoggingBogoProducer
 from publix_bogos.filter_prettify import filter_prettify_items
 from publix_bogos.producer import BogoProducer
@@ -21,7 +21,6 @@ def main():
     logger.info('Config values:')
 
     keywords = []
-    is_keyword_multiword = False
     url = ''
     prefix_text = ''
     postfix_text = ''
@@ -42,10 +41,6 @@ def main():
             logger.info('keywords: ' + str(keywords))
             url = bogo_config['url']
             logger.info('url: ' + url)
-
-    if 'keyword_multiword' in bogo_config:
-        is_keyword_multiword = bogo_config.getboolean('is_keyword_multiword')
-        logger.info('is_keyword_multiword: ' + str(is_keyword_multiword))
 
     if 'prefix_text' in bogo_config:
         prefix_text = bogo_config['prefix_text']
@@ -140,6 +135,9 @@ def build_producer(producer_type, config: configparser.RawConfigParser) -> BogoP
         case _:
             raise LookupError(f'No producer is found for type "{producer_type}"')
 
+
+def lambda_handler(event, context):
+    main()
 
 if __name__ == '__main__':
     main()
