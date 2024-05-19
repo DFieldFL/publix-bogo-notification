@@ -8,7 +8,7 @@ Parses Publix BOGO items based on search terms and publishes them to producers l
 # Development Setup
 1. Clone the repository
 2. Install the dependencies `pip install -r requirements-dev.txt`
-3. Copy file `config.template.ini` and save it as `config.ini`
+3. Copy file `config.template.ini` and save it as `src/config.ini`
 4. Modify the relevant information in `config.ini`
 5. Fill out the URL for parsing the Publix Ads (Go to the Publix Ads page and scroll to the bottom for "WEEKLY AD ACCESSIBILITY". One of the pages in that area is what is currently being used)
 6. Execute `main.py`
@@ -22,12 +22,12 @@ Parses Publix BOGO items based on search terms and publishes them to producers l
 # AWS Lambda Setup
 1. Clone the repository
 2. Install the dependencies `pip install -r requirements.txt`
-3. Copy file `config.template.ini` and save it as `config.ini`
+3. Copy file `config.template.ini` and save it as `src/config.ini`
 4. Modify the relevant information in `config.ini`
 5. Fill out the URL for parsing the Publix Ads (Go to the Publix Ads page and scroll to the bottom for "WEEKLY AD ACCESSIBILITY". One of the pages in that area is what is currently being used)
-6. Test it out `python -c 'from BogoMain import *; lambda_handler("", "");'`
-7. Zip the project files `zip -g ~/bogo.zip BogoMain.py bogos.py config.ini`
-8. Add projects dependencies (`site-packages`). cd to `site-packages` and execute this command `zip -r9 ~/bogo.zip .`
+6. Test it out `cd src` and execute `python -c 'from publix_bogos.main import *; lambda_handler("", "");'`
+7. Zip the project files `cd src` and `zip -r ~/bogo.zip publix_bogos config.ini -x "*__pycache__*"`
+8. Add projects dependencies (`site-packages`). cd to `site-packages` and execute this command `zip -r ~/bogo.zip .`
 
 # Config
 ## Logging
