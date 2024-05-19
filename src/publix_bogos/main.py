@@ -79,6 +79,8 @@ def set_logging(config: configparser.RawConfigParser):
         log_level = log_level_mapping.get(config['logging']['level'], logging.INFO)
 
     logging.basicConfig(level=log_level)
+    # Needed because AWS doesn't seem to understand the log level set via basicConfig
+    logging.getLogger().setLevel(log_level)
 
 
 def retrieve_bogos(bogo_url: str) -> list[BogoItem]:
