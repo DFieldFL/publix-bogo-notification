@@ -21,7 +21,6 @@ def main():
     logger.info('Config values:')
 
     keywords = []
-    is_keyword_multiword = False
     url = ''
     prefix_text = ''
     postfix_text = ''
@@ -42,10 +41,6 @@ def main():
             logger.info('keywords: ' + str(keywords))
             url = bogo_config['url']
             logger.info('url: ' + url)
-
-    if 'keyword_multiword' in bogo_config:
-        is_keyword_multiword = bogo_config.getboolean('is_keyword_multiword')
-        logger.info('is_keyword_multiword: ' + str(is_keyword_multiword))
 
     if 'prefix_text' in bogo_config:
         prefix_text = bogo_config['prefix_text']
