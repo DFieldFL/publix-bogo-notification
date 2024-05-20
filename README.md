@@ -27,7 +27,7 @@ Parses Publix BOGO items based on search terms and publishes them to producers l
 5. Fill out the URL for parsing the Publix Ads (Go to the Publix Ads page and scroll to the bottom for "WEEKLY AD ACCESSIBILITY". One of the pages in that area is what is currently being used)
 6. Test it out `cd src` and execute `python -c 'from publix_bogos.main import *; lambda_handler("", "");'`
 7. Zip the project files `cd src` and `zip -r ~/bogo.zip publix_bogos config.ini -x "*__pycache__*"`
-8. Add projects dependencies (`site-packages`). cd to `site-packages` and execute this command `zip -r ~/bogo.zip .`
+8. Add projects dependencies (`site-packages`). cd to `site-packages` (`python -m site`) and execute this command `zip -r ~/bogo.zip .`
 
 # Config
 ## Logging
